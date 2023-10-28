@@ -27,5 +27,9 @@ public class ControllerApp {
             ctx.html("Domains are saving to file.");
         });
 
+        app.exception(Exception.class, (exception, ctx) -> {
+            ctx.html("Some errors :(");
+        });
+
     }
 }
