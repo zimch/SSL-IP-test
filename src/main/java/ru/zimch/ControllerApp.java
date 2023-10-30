@@ -1,10 +1,10 @@
 package ru.zimch;
 
 import io.javalin.Javalin;
-import io.javalin.http.staticfiles.Location;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import ru.zimch.services.CertificateCheckService;
+import ru.zimch.utils.FileUtil;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -18,9 +18,12 @@ public class ControllerApp {
         };
 
         Javalin app = Javalin.create(config -> {
-            config.jetty.server(serverSupplier);
-            config.staticFiles.add("/public", Location.CLASSPATH);
+            config.server(serverSupplier);
         }).start(8080);
+
+        app.get("/", ctx -> {
+            ctx.html(FileUtil.getFileContent("main.html"));
+        });
 
         app.post("/find-domains", ctx -> {
             CertificateCheckService.findDomains(ctx.formParam("idmask"), Integer.parseInt(Objects.requireNonNull(ctx.formParam("threads"))));
@@ -28,6 +31,7 @@ public class ControllerApp {
         });
 
         app.exception(Exception.class, (exception, ctx) -> {
+            System.out.println(exception.getMessage());
             ctx.html("Some errors :(");
         });
 

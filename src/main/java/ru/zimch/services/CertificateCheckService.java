@@ -10,7 +10,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.zimch.utils.DomainUtil;
+import ru.zimch.utils.FileUtil;
 
 import javax.net.ssl.SSLSession;
 import java.io.IOException;
@@ -118,7 +118,7 @@ public class CertificateCheckService {
                         Certificate[] peerCertificates = (Certificate[])context.getAttribute(PEER_CERTIFICATES);
 
                         X509Certificate real = (X509Certificate) peerCertificates[0];
-                        DomainUtil.writeDomainToFile(real.getSubjectX500Principal().getName());
+                        FileUtil.writeDomainToFile(real.getSubjectX500Principal().getName());
                     } catch (IOException e) {
                         logger.error("[IOException]: " + e.getLocalizedMessage());
                     }
